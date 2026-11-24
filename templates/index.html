@@ -1,0 +1,520 @@
+{% extends "base.html" %}
+{% block title %}Kubera Bank – Your Wealth, Our Responsibility{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO & BANK ENTRANCE EXPERIENCE ===== -->
+<section class="kb-hero" id="hero">
+
+    <!-- INTRO LOADER (Smooth Brand Reveal on Load) -->
+    <div class="kb-intro-loader" id="introLoader">
+        <div class="kb-intro-logo">
+            <div class="kb-intro-mark">K</div>
+            <div class="kb-intro-wordmark">
+                <span class="kb-intro-name">KUBERA</span>
+                <span class="kb-intro-bank">BANK</span>
+            </div>
+        </div>
+        <p class="kb-intro-tagline">“Your Wealth, Our Responsibility.”</p>
+        <div class="kb-intro-bar"></div>
+    </div>
+
+    <!-- THE IMMERSIVE BANK SCENE CONTAINER -->
+    <div class="kb-scene" id="bankScene">
+
+        <!-- Atmosphere Background (Lighting & Depth) -->
+        <div class="kb-scene-sky">
+            <div class="kb-sky-spotlight"></div>
+            <div class="kb-sky-stars"></div>
+        </div>
+
+        <!-- HERO CONTENT OVERLAY (Clean, Elegant & Perfectly Spaced) -->
+        <div class="kb-hero-content" id="heroContent">
+            <div class="kb-hero-badge">
+                <i class="fas fa-shield-alt"></i> EST. 2024 &bull; BENCHMARK OF TRUST
+            </div>
+            <h1 class="kb-hero-heading">
+                Welcome to <span class="kb-gold-gradient">Kubera Bank</span>
+            </h1>
+            <p class="kb-hero-tagline">“Your Wealth, Our Responsibility.”</p>
+
+            <div class="kb-hero-actions">
+                <a href="{{ url_for('register') }}" class="kb-btn-hero-primary">
+                    <i class="fas fa-university"></i> Open an Account
+                </a>
+                <a href="#services" class="kb-btn-hero-secondary">
+                    <i class="fas fa-compass"></i> Explore Services
+                </a>
+            </div>
+
+            <!-- Sleek Scroll Prompt -->
+            <div class="kb-scroll-guide" id="scrollGuide">
+                <span class="kb-scroll-guide-text">SCROLL TO ENTER</span>
+                <i class="fas fa-chevron-down kb-scroll-arrow-anim"></i>
+            </div>
+        </div>
+
+        <!-- GRAND BANK BUILDING FACADE (Balanced Proportions & Clear Inscriptions) -->
+        <div class="kb-scene-building" id="sceneBuilding">
+
+            <!-- Roof & Pediment -->
+            <div class="kb-facade-pediment">
+                <div class="kb-pediment-cornice"></div>
+                <div class="kb-pediment-tympanum">
+                    <div class="kb-pediment-crest">
+                        <div class="kb-crest-ring">
+                            <span class="kb-crest-k">K</span>
+                        </div>
+                    </div>
+                    <div class="kb-pediment-engraving">KUBERA BANK</div>
+                </div>
+            </div>
+
+            <!-- Entablature (Architrave & Frieze) -->
+            <div class="kb-facade-entablature">
+                <div class="kb-dentil-strip"></div>
+                <div class="kb-architrave-bar"></div>
+            </div>
+
+            <!-- Main Colonnade & Entrance Hall -->
+            <div class="kb-facade-colonnade">
+                <!-- Sconce Lamp Left -->
+                <div class="kb-sconce-lamp kb-sconce-left">
+                    <div class="kb-lamp-globe"></div>
+                    <div class="kb-lamp-arm"></div>
+                </div>
+
+                <!-- Grand Classical Fluted Columns -->
+                <div class="kb-col-wrapper">
+                    <div class="kb-capital"></div>
+                    <div class="kb-fluted-pillar"></div>
+                    <div class="kb-base"></div>
+                </div>
+                <div class="kb-col-wrapper">
+                    <div class="kb-capital"></div>
+                    <div class="kb-fluted-pillar"></div>
+                    <div class="kb-base"></div>
+                </div>
+
+                <!-- GRAND ENTRANCE PORTAL WITH 3D GLASS DOORS -->
+                <div class="kb-portal-portal" id="buildingEntrance">
+                    <!-- Grand Archway Frame -->
+                    <div class="kb-arch-surround">
+                        <div class="kb-arch-header">
+                            <i class="fas fa-landmark kb-arch-keystone"></i>
+                            <span class="kb-arch-banner">MAIN ENTRANCE</span>
+                        </div>
+                    </div>
+
+                    <!-- 3D Doors Wrapper with Deep Interior Backdrop -->
+                    <div class="kb-doors-frame">
+                        <!-- Warm Interior Hallway View (seen through open doors) -->
+                        <div class="kb-portal-interior-view" id="portalInterior">
+                            <div class="kb-interior-glow-radial"></div>
+                            <div class="kb-interior-chandelier-lit"></div>
+                            <div class="kb-interior-teller-desk">
+                                <span class="kb-teller-gold-sign">KUBERA BANK</span>
+                            </div>
+                            <div class="kb-interior-marble-floor"></div>
+                        </div>
+
+                        <!-- Left 3D Door -->
+                        <div class="kb-portal-door kb-door-left" id="doorLeft">
+                            <div class="kb-door-brass-rim">
+                                <div class="kb-glass-pane">
+                                    <div class="kb-pane-mullion-v"></div>
+                                    <div class="kb-pane-mullion-h"></div>
+                                    <div class="kb-glass-reflection"></div>
+                                </div>
+                                <div class="kb-brass-handle kb-handle-right">
+                                    <div class="kb-handle-bar"></div>
+                                </div>
+                                <div class="kb-door-kickplate"></div>
+                            </div>
+                        </div>
+
+                        <!-- Right 3D Door -->
+                        <div class="kb-portal-door kb-door-right" id="doorRight">
+                            <div class="kb-door-brass-rim">
+                                <div class="kb-glass-pane">
+                                    <div class="kb-pane-mullion-v"></div>
+                                    <div class="kb-pane-mullion-h"></div>
+                                    <div class="kb-glass-reflection"></div>
+                                </div>
+                                <div class="kb-brass-handle kb-handle-left">
+                                    <div class="kb-handle-bar"></div>
+                                </div>
+                                <div class="kb-door-kickplate"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Polished Granite Threshold / Doorstep -->
+                    <div class="kb-portal-threshold"></div>
+                </div>
+
+                <!-- Grand Classical Fluted Columns Right -->
+                <div class="kb-col-wrapper">
+                    <div class="kb-capital"></div>
+                    <div class="kb-fluted-pillar"></div>
+                    <div class="kb-base"></div>
+                </div>
+                <div class="kb-col-wrapper">
+                    <div class="kb-capital"></div>
+                    <div class="kb-fluted-pillar"></div>
+                    <div class="kb-base"></div>
+                </div>
+
+                <!-- Sconce Lamp Right -->
+                <div class="kb-sconce-lamp kb-sconce-right">
+                    <div class="kb-lamp-globe"></div>
+                    <div class="kb-lamp-arm"></div>
+                </div>
+            </div>
+
+            <!-- Grand Marble Steps (Multi-tiered Podium) -->
+            <div class="kb-facade-steps">
+                <div class="kb-marble-step kb-step-1"></div>
+                <div class="kb-marble-step kb-step-2"></div>
+                <div class="kb-marble-step kb-step-3"></div>
+                <div class="kb-marble-step kb-step-4"></div>
+                <div class="kb-marble-step kb-step-5"></div>
+            </div>
+
+        </div><!-- end #sceneBuilding -->
+
+    </div><!-- end #bankScene -->
+</section>
+
+<!-- ===== STATS TICKER ===== -->
+<section class="kb-ticker">
+    <div class="kb-ticker-track">
+        <div class="kb-ticker-item"><i class="fas fa-users"></i> <strong>50,000+</strong> Happy Customers</div>
+        <div class="kb-ticker-item"><i class="fas fa-shield-alt"></i> 100% Secure Banking</div>
+        <div class="kb-ticker-item"><i class="fas fa-bolt"></i> Instant RTGS / NEFT / IMPS</div>
+        <div class="kb-ticker-item"><i class="fas fa-award"></i> <strong>EST. 2024</strong> – RBI Grade Security</div>
+        <div class="kb-ticker-item"><i class="fas fa-clock"></i> 24×7 Digital Platform</div>
+        <div class="kb-ticker-item"><i class="fas fa-percentage"></i> Savings Interest up to 7.25% p.a.</div>
+        <div class="kb-ticker-item"><i class="fas fa-hand-holding-usd"></i> Home Loans from 8.5% p.a.</div>
+        <div class="kb-ticker-item"><i class="fas fa-credit-card"></i> Lifetime Free Credit Cards</div>
+        <!-- Duplicates for smooth seamless loop -->
+        <div class="kb-ticker-item"><i class="fas fa-users"></i> <strong>50,000+</strong> Happy Customers</div>
+        <div class="kb-ticker-item"><i class="fas fa-shield-alt"></i> 100% Secure Banking</div>
+        <div class="kb-ticker-item"><i class="fas fa-bolt"></i> Instant RTGS / NEFT / IMPS</div>
+        <div class="kb-ticker-item"><i class="fas fa-award"></i> <strong>EST. 2024</strong> – RBI Grade Security</div>
+    </div>
+</section>
+
+<!-- ===== SERVICES SECTION ===== -->
+<section class="kb-section" id="services">
+    <div class="kb-container">
+        <div class="kb-section-header" data-animate="fade-up">
+            <span class="kb-section-label"><i class="fas fa-university"></i> Main Banking Hall</span>
+            <h2>Digital Banking Services</h2>
+            <p>Step inside Kubera Bank. Perform deposits, instant transfers, or apply for credit anytime, anywhere.</p>
+        </div>
+
+        <div class="kb-services-grid">
+            <div class="kb-service-card" data-animate="fade-up" data-delay="0">
+                <div class="kb-service-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h3>Savings & Current Accounts</h3>
+                <p>Open high-yield savings accounts or zero-limit current accounts in less than 2 minutes with instant account number generation.</p>
+                <a href="{{ url_for('register') }}" class="kb-link">Open Account <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="kb-service-card" data-animate="fade-up" data-delay="100">
+                <div class="kb-service-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3>Instant Fund Transfers</h3>
+                <p>Send and receive money seamlessly across accounts with real-time balance updates, full audit trails, and zero transaction fees.</p>
+                <a href="{{ url_for('login') }}" class="kb-link">Transfer Money <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="kb-service-card" data-animate="fade-up" data-delay="200">
+                <div class="kb-service-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <h3>Paperless Loans</h3>
+                <p>Personal, Education, and Home loans starting at 8.5% p.a. with live EMI estimation, rapid review, and direct disbursal.</p>
+                <a href="{{ url_for('login') }}" class="kb-link">Calculate EMI & Apply <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="kb-service-card" data-animate="fade-up" data-delay="300">
+                <div class="kb-service-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h3>Exclusive Credit Cards</h3>
+                <p>Choose from Classic, Gold, and Premium metal cards with complimentary airport lounge access, 10X reward points, and cashbacks.</p>
+                <a href="{{ url_for('login') }}" class="kb-link">Choose Your Card <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="kb-service-card" data-animate="fade-up" data-delay="400">
+                <div class="kb-service-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Spending Analytics</h3>
+                <p>Visualize your cash inflows and outflows with interactive Chart.js graphs, expense classification, and monthly summaries.</p>
+                <a href="{{ url_for('login') }}" class="kb-link">Explore Analytics <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="kb-service-card" data-animate="fade-up" data-delay="500">
+                <div class="kb-service-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h3>Certified E-Statements</h3>
+                <p>Generate and download verified PDF bank statements with complete transaction histories anytime with a single click.</p>
+                <a href="{{ url_for('login') }}" class="kb-link">Download Statement <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== WHY CHOOSE KUBERA BANK ===== -->
+<section class="kb-section kb-section--dark" id="about">
+    <div class="kb-container">
+        <div class="kb-two-col">
+            <div class="kb-two-col-text" data-animate="fade-right">
+                <span class="kb-section-label kb-section-label--light">Why Choose Us</span>
+                <h2>Banking Built on<br><span class="kb-gold-gradient">Uncompromising Trust</span></h2>
+                <p>At Kubera Bank, we combine the solid foundation of traditional banking with state-of-the-art fintech engineering. Every rupee deposited is safeguarded by strict multi-layered security protocols.</p>
+
+                <div class="kb-feature-list">
+                    <div class="kb-feature">
+                        <div class="kb-feature-icon"><i class="fas fa-lock"></i></div>
+                        <div>
+                            <h4>Bank-Grade Cryptography</h4>
+                            <p>Military-grade salted password hashing, automatic session protection, and CSRF defense guard every action.</p>
+                        </div>
+                    </div>
+                    <div class="kb-feature">
+                        <div class="kb-feature-icon"><i class="fas fa-bolt"></i></div>
+                        <div>
+                            <h4>Real-Time Atomic Transfers</h4>
+                            <p>Funds are transferred instantly between accounts with strict database transaction rollbacks to prevent data inconsistency.</p>
+                        </div>
+                    </div>
+                    <div class="kb-feature">
+                        <div class="kb-feature-icon"><i class="fas fa-headset"></i></div>
+                        <div>
+                            <h4>Smart Digital Assistant</h4>
+                            <p>Get instant answers regarding account opening, limits, card privileges, and loan terms 24/7 without waiting.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('register') }}" class="kb-btn-hero-primary">
+                    <i class="fas fa-user-plus"></i> Open Your Account Today
+                </a>
+            </div>
+
+            <div class="kb-two-col-visual" data-animate="fade-left">
+                <div class="kb-stats-card-group">
+                    <div class="kb-stat-card">
+                        <div class="kb-stat-num" data-count="50000">0</div>
+                        <div class="kb-stat-label">Active Customers</div>
+                    </div>
+                    <div class="kb-stat-card">
+                        <div class="kb-stat-num" data-count="99">0</div>
+                        <div class="kb-stat-label">% Customer Satisfaction</div>
+                    </div>
+                    <div class="kb-stat-card">
+                        <div class="kb-stat-num" data-count="3">0</div>
+                        <div class="kb-stat-label">Tiered Credit Cards</div>
+                    </div>
+                    <div class="kb-stat-card">
+                        <div class="kb-stat-num" data-count="24">0</div>
+                        <div class="kb-stat-label">× 7 Continuous Banking</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== LOANS & CREDIT CARDS SHOWCASE ===== -->
+<section class="kb-section" id="loans-section">
+    <div class="kb-container">
+        <div class="kb-section-header" data-animate="fade-up">
+            <span class="kb-section-label">Financing Solutions</span>
+            <h2>Loans & Credit Cards</h2>
+            <p>Custom-crafted financing options with transparent rates and flexible repayment schedules.</p>
+        </div>
+
+        <div class="kb-products-grid">
+            <!-- Personal Loan -->
+            <div class="kb-product-card" data-animate="fade-up" data-delay="0">
+                <div class="kb-product-tag">Personal Financing</div>
+                <div class="kb-product-icon"><i class="fas fa-user-tie"></i></div>
+                <h3>Personal Loan</h3>
+                <div class="kb-product-rate">From <strong>10.5%</strong> p.a.</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> Loans up to ₹25,00,000</li>
+                    <li><i class="fas fa-check"></i> Flexible 1 to 5 Year Tenures</li>
+                    <li><i class="fas fa-check"></i> Instant Online Eligibility Check</li>
+                    <li><i class="fas fa-check"></i> 100% Paperless Processing</li>
+                </ul>
+                <a href="{{ url_for('login') }}" class="kb-btn-outline">Apply for Loan</a>
+            </div>
+
+            <!-- Home Loan (Featured) -->
+            <div class="kb-product-card kb-product-card--featured" data-animate="fade-up" data-delay="100">
+                <div class="kb-product-tag kb-product-tag--gold">Most Popular</div>
+                <div class="kb-product-icon"><i class="fas fa-home"></i></div>
+                <h3>Home Loan</h3>
+                <div class="kb-product-rate">From <strong>8.5%</strong> p.a.</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> Financing up to ₹2,00,00,000</li>
+                    <li><i class="fas fa-check"></i> Up to 30-Year Extended Tenure</li>
+                    <li><i class="fas fa-check"></i> Maximum Tax Exemption Benefits</li>
+                    <li><i class="fas fa-check"></i> Zero Prepayment Penalties</li>
+                </ul>
+                <a href="{{ url_for('login') }}" class="kb-btn-primary">Apply for Home Loan</a>
+            </div>
+
+            <!-- Education Loan -->
+            <div class="kb-product-card" data-animate="fade-up" data-delay="200">
+                <div class="kb-product-tag">Academic Financing</div>
+                <div class="kb-product-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3>Education Loan</h3>
+                <div class="kb-product-rate">From <strong>9.0%</strong> p.a.</div>
+                <ul>
+                    <li><i class="fas fa-check"></i> Coverage up to ₹50,00,000</li>
+                    <li><i class="fas fa-check"></i> Extended Moratorium Grace Period</li>
+                    <li><i class="fas fa-check"></i> Covers Tuition & Living Costs</li>
+                    <li><i class="fas fa-check"></i> Section 80E Tax Deduction</li>
+                </ul>
+                <a href="{{ url_for('login') }}" class="kb-btn-outline">Apply for Education Loan</a>
+            </div>
+        </div>
+
+        <!-- Credit Cards Preview -->
+        <div class="kb-cc-grid">
+            <div class="kb-cc-card" data-animate="fade-up" data-delay="0">
+                <div class="kb-cc-visual kb-cc-classic">
+                    <div class="kb-cc-chip"></div>
+                    <div class="kb-cc-logo">KUBERA</div>
+                    <div class="kb-cc-number">•••• •••• •••• 4021</div>
+                    <div class="kb-cc-type">Classic Card</div>
+                </div>
+                <div class="kb-cc-info">
+                    <h4>Classic Card</h4>
+                    <p>Zero annual fee with 1% flat cashback on all domestic retail expenditures.</p>
+                    <a href="{{ url_for('login') }}" class="kb-btn-outline-sm">Apply Now</a>
+                </div>
+            </div>
+
+            <div class="kb-cc-card" data-animate="fade-up" data-delay="100">
+                <div class="kb-cc-visual kb-cc-gold">
+                    <div class="kb-cc-chip"></div>
+                    <div class="kb-cc-logo">KUBERA</div>
+                    <div class="kb-cc-number">•••• •••• •••• 8842</div>
+                    <div class="kb-cc-type">Gold Privileges</div>
+                </div>
+                <div class="kb-cc-info">
+                    <h4>Gold Card</h4>
+                    <p>5X reward points on dining and travel + complimentary airport lounge access.</p>
+                    <a href="{{ url_for('login') }}" class="kb-btn-outline-sm">Apply Now</a>
+                </div>
+            </div>
+
+            <div class="kb-cc-card" data-animate="fade-up" data-delay="200">
+                <div class="kb-cc-visual kb-cc-premium">
+                    <div class="kb-cc-chip"></div>
+                    <div class="kb-cc-logo">KUBERA</div>
+                    <div class="kb-cc-number">•••• •••• •••• 9901</div>
+                    <div class="kb-cc-type">Black Premium Metal</div>
+                </div>
+                <div class="kb-cc-info">
+                    <h4>Premium Card</h4>
+                    <p>Heavy metal card with 10X reward multipliers and 24/7 global concierge service.</p>
+                    <a href="{{ url_for('login') }}" class="kb-btn-outline-sm">Apply Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SECURITY & TRUST ===== -->
+<section class="kb-section kb-section--accent" id="security">
+    <div class="kb-container">
+        <div class="kb-two-col">
+            <div class="kb-security-badges" data-animate="fade-right">
+                <div class="kb-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>256-Bit SSL</span>
+                    <small>Encrypted End-to-End</small>
+                </div>
+                <div class="kb-badge">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>Secure Auth</span>
+                    <small>Cryptographic Hashing</small>
+                </div>
+                <div class="kb-badge">
+                    <i class="fas fa-database"></i>
+                    <span>ACID Compliant</span>
+                    <small>Safe Transactions</small>
+                </div>
+                <div class="kb-badge">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Privacy First</span>
+                    <small>Strict Data Protection</small>
+                </div>
+            </div>
+            <div data-animate="fade-left">
+                <span class="kb-section-label">Infrastructure Security</span>
+                <h2>Institutional Protection for<br><span class="kb-gold-gradient">Every Single Rupee</span></h2>
+                <p>Kubera Bank enforces rigorous financial controls. From parameterized SQL queries to atomic database rollbacks and session token defense, your deposits and transactions are strictly protected.</p>
+                <div class="kb-security-list">
+                    <div class="kb-sec-item"><i class="fas fa-check-circle"></i> Industry-standard Werkzeug scrypt/pbkdf2 password hashing</div>
+                    <div class="kb-sec-item"><i class="fas fa-check-circle"></i> CSRF verification tokens guarding every form submission</div>
+                    <div class="kb-sec-item"><i class="fas fa-check-circle"></i> Atomic SQL transactions preventing fund duplication or loss</div>
+                    <div class="kb-sec-item"><i class="fas fa-check-circle"></i> Parameterized SQL architecture with zero string interpolation</div>
+                    <div class="kb-sec-item"><i class="fas fa-check-circle"></i> Strict real-time overdraft prevention and ledger synchronization</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CHATBOT BUTTON & WINDOW ===== -->
+<div class="kb-chatbot-trigger" id="chatbotTrigger" title="Banking Assistant">
+    <i class="fas fa-comments"></i>
+    <span class="kb-chatbot-badge">1</span>
+</div>
+
+<div class="kb-chatbot-window" id="chatbotWindow">
+    <div class="kb-chatbot-header">
+        <div class="kb-chatbot-avatar"><i class="fas fa-robot"></i></div>
+        <div>
+            <strong>Kubera Assistant</strong>
+            <span class="kb-chatbot-status">Online • 24/7 Digital Support</span>
+        </div>
+        <button id="chatbotClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="kb-chatbot-messages" id="chatMessages">
+        <div class="kb-chat-msg kb-chat-bot">
+            <div class="kb-chat-bubble">
+                👋 Welcome to Kubera Bank! I am your 24/7 Smart Banking Assistant.<br><br>
+                How can I assist you today?<br>
+                • <strong>Open Account</strong><br>
+                • <strong>Deposit & Withdrawal limits</strong><br>
+                • <strong>Instant Transfers</strong><br>
+                • <strong>Loan Interest Rates</strong><br>
+                • <strong>Credit Card Benefits</strong>
+            </div>
+        </div>
+    </div>
+    <div class="kb-chatbot-input">
+        <input type="text" id="chatInput" placeholder="Type your question here..." />
+        <button id="chatSend"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+{% endblock %}

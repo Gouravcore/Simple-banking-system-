@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Credit Cards – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header kb-page-header--dark">
+        <div class="kb-container">
+            <h1><i class="fas fa-credit-card"></i> Credit Card Applications</h1>
+            <p>Choose the right credit card for your lifestyle.</p>
+        </div>
+    </div>
+
+    <div class="kb-container">
+
+        <!-- Card Types Visual -->
+        <div class="kb-cc-showcase">
+            <div class="kb-cc-showcase-card kb-cc-classic-big">
+                <div class="kb-cc-chip"></div>
+                <div class="kb-cc-logo-big">KUBERA</div>
+                <div class="kb-cc-number-big">•••• •••• •••• 1234</div>
+                <div class="kb-cc-footer-row">
+                    <span>CLASSIC</span>
+                    <span>VALID THRU ••/••</span>
+                </div>
+            </div>
+            <div class="kb-cc-showcase-card kb-cc-gold-big">
+                <div class="kb-cc-chip"></div>
+                <div class="kb-cc-logo-big">KUBERA</div>
+                <div class="kb-cc-number-big">•••• •••• •••• 5678</div>
+                <div class="kb-cc-footer-row">
+                    <span>GOLD</span>
+                    <span>VALID THRU ••/••</span>
+                </div>
+            </div>
+            <div class="kb-cc-showcase-card kb-cc-premium-big">
+                <div class="kb-cc-chip"></div>
+                <div class="kb-cc-logo-big">KUBERA</div>
+                <div class="kb-cc-number-big">•••• •••• •••• 9012</div>
+                <div class="kb-cc-footer-row">
+                    <span>PREMIUM</span>
+                    <span>VALID THRU ••/••</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="kb-two-panel">
+            <!-- Application Form -->
+            <div class="kb-form-card">
+                <h3><i class="fas fa-id-card"></i> Apply for a Credit Card</h3>
+                <form action="{{ url_for('credit_cards') }}" method="POST" class="kb-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="kb-form-group">
+                        <label>Select Card Type</label>
+                        <div class="kb-radio-group">
+                            <label class="kb-radio-card">
+                                <input type="radio" name="card_type" value="Classic Card" required>
+                                <div class="kb-radio-content">
+                                    <i class="fas fa-credit-card"></i>
+                                    <strong>Classic Card</strong>
+                                    <span>Basic rewards, 1% cashback, No joining fee</span>
+                                </div>
+                            </label>
+                            <label class="kb-radio-card">
+                                <input type="radio" name="card_type" value="Gold Card">
+                                <div class="kb-radio-content">
+                                    <i class="fas fa-star" style="color:#D4AF37"></i>
+                                    <strong>Gold Card</strong>
+                                    <span>5X rewards, travel benefits, ₹999 joining fee</span>
+                                </div>
+                            </label>
+                            <label class="kb-radio-card">
+                                <input type="radio" name="card_type" value="Premium Card">
+                                <div class="kb-radio-content">
+                                    <i class="fas fa-crown" style="color:#D4AF37"></i>
+                                    <strong>Premium Card</strong>
+                                    <span>10X rewards, lounge access, ₹4,999 joining fee</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-row">
+                        <div class="kb-form-group">
+                            <label for="annual_income">
+                                <i class="fas fa-rupee-sign"></i> Annual Income (₹)
+                            </label>
+                            <input type="number" id="annual_income" name="annual_income"
+                                   placeholder="e.g. 600000" min="100000" required>
+                        </div>
+                        <div class="kb-form-group">
+                            <label for="employment_type">Employment Type</label>
+                            <select id="employment_type" name="employment_type" required>
+                                <option value="" disabled selected>Select type</option>
+                                <option value="Salaried">Salaried</option>
+                                <option value="Self-Employed">Self-Employed</option>
+                                <option value="Business">Business Owner</option>
+                                <option value="Student">Student</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="kb-eligibility-note" id="eligibilityNote"></div>
+
+                    <button type="submit" class="kb-btn-primary kb-btn-full">
+                        <i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                </form>
+            </div>
+
+            <!-- My Applications -->
+            <div class="kb-applications-panel">
+                <h3><i class="fas fa-list-alt"></i> My Card Applications</h3>
+                {% if my_cards %}
+                <div class="kb-app-list">
+                    {% for card in my_cards %}
+                    <div class="kb-app-card">
+                        <div class="kb-app-header">
+                            <span class="kb-app-type">{{ card.card_type }}</span>
+                            <span class="kb-status-badge
+                                {% if card.status == 'Approved' %}kb-status-approved
+                                {% elif card.status == 'Rejected' %}kb-status-rejected
+                                {% else %}kb-status-pending{% endif %}">
+                                {% if card.status == 'Approved' %}<i class="fas fa-check"></i>
+                                {% elif card.status == 'Rejected' %}<i class="fas fa-times"></i>
+                                {% else %}<i class="fas fa-clock"></i>{% endif %}
+                                {{ card.status }}
+                            </span>
+                        </div>
+                        <div class="kb-app-details">
+                            <span>ID: <code>{{ card.application_id }}</code></span>
+                            <span>Applied: {{ card.created_at[:10] }}</span>
+                        </div>
+                        {% if card.admin_note %}
+                        <div class="kb-app-note">
+                            <i class="fas fa-comment"></i> {{ card.admin_note }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="kb-empty-state">
+                    <i class="fas fa-credit-card"></i>
+                    <p>No credit card applications yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Show eligibility hint based on card selection
+document.querySelectorAll('input[name="card_type"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const note = document.getElementById('eligibilityNote');
+        const eligibility = {
+            'Classic Card': 'Minimum annual income: ₹1,80,000',
+            'Gold Card':    'Minimum annual income: ₹3,00,000',
+            'Premium Card': 'Minimum annual income: ₹6,00,000'
+        };
+        note.innerHTML = '<i class="fas fa-info-circle"></i> Eligibility: ' + (eligibility[this.value] || '');
+        note.style.display = 'block';
+    });
+});
+</script>
+{% endblock %}

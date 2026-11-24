@@ -1,0 +1,492 @@
+/* ============================================================
+   KUBERA BANK – Dashboard Stylesheet
+   ============================================================ */
+
+/* ---- Dashboard Layout ---- */
+.kb-dash-layout {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 68px;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.kb-sidebar {
+    width: 240px;
+    background: var(--charcoal);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: fixed;
+    top: 68px;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s ease;
+}
+
+.kb-sidebar--admin { background: #0d1117; }
+
+.kb-sidebar-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.kb-sidebar-avatar {
+    width: 42px; height: 42px;
+    background: var(--red);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.kb-avatar-admin {
+    background: var(--gold);
+    color: var(--charcoal);
+}
+
+.kb-sidebar-info strong {
+    display: block;
+    color: var(--white);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+.kb-sidebar-info span {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.72rem;
+    font-family: monospace;
+}
+
+.kb-sidebar-nav {
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.kb-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: var(--transition);
+    position: relative;
+    text-decoration: none;
+}
+.kb-sidebar-link i { width: 16px; text-align: center; font-size: 0.875rem; flex-shrink: 0; }
+.kb-sidebar-link:hover, .kb-sidebar-link.active {
+    background: rgba(255,255,255,0.08);
+    color: var(--white);
+}
+.kb-sidebar-link.active {
+    background: rgba(183,28,28,0.3);
+    color: var(--white);
+    border-left: 3px solid var(--red);
+}
+.kb-sidebar-link--highlight {
+    background: rgba(212,175,55,0.15);
+    color: var(--gold) !important;
+    border: 1px dashed rgba(212,175,55,0.3);
+    margin: 4px 0;
+}
+.kb-sidebar-link--highlight:hover { background: rgba(212,175,55,0.25); }
+.kb-sidebar-link--logout:hover { background: rgba(183,28,28,0.3) !important; color: #ff7070 !important; }
+
+.kb-sidebar-badge {
+    margin-left: auto;
+    background: var(--red);
+    color: var(--white);
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 5px;
+}
+
+/* Mobile sidebar toggle */
+.kb-sidebar-toggle {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    left: 20px;
+    z-index: 200;
+    width: 44px; height: 44px;
+    background: var(--charcoal);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+.kb-dash-main {
+    flex: 1;
+    margin-left: 240px;
+    padding: 32px;
+    min-height: calc(100vh - 68px);
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Top bar */
+.kb-dash-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.kb-dash-welcome {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin-bottom: 2px;
+}
+
+.kb-dash-date {
+    color: var(--grey);
+    font-size: 0.85rem;
+}
+
+.kb-dash-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.kb-topbar-icon {
+    position: relative;
+    width: 40px; height: 40px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--charcoal);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+.kb-topbar-icon:hover { background: var(--red-light); color: var(--red); border-color: var(--red); }
+.kb-notif-dot {
+    position: absolute;
+    top: -4px; right: -4px;
+    background: var(--red);
+    color: var(--white);
+    min-width: 18px; height: 18px;
+    border-radius: 9px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* ============================================================
+   NO ACCOUNT STATE
+   ============================================================ */
+.kb-no-account {
+    text-align: center;
+    padding: 80px 24px;
+    background: var(--white);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+}
+.kb-no-account-icon {
+    font-size: 3rem;
+    color: var(--gold);
+    margin-bottom: 16px;
+    opacity: 0.6;
+}
+.kb-no-account h3 {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+.kb-no-account p { color: var(--grey); font-size: 0.95rem; margin-bottom: 24px; }
+
+/* ============================================================
+   BALANCE CARD
+   ============================================================ */
+.kb-balance-card {
+    background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 100%);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    overflow: hidden;
+    position: relative;
+    min-height: 160px;
+}
+
+.kb-balance-left { z-index: 1; }
+.kb-balance-label {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+}
+.kb-balance-amount {
+    font-family: var(--font-serif);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 16px;
+    line-height: 1;
+}
+.kb-balance-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.85rem;
+    font-family: monospace;
+    letter-spacing: 1px;
+}
+.kb-acc-type-badge {
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: var(--font-sans);
+}
+
+.kb-balance-right { z-index: 1; }
+.kb-balance-pattern {
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 40px solid rgba(255,255,255,0.05);
+}
+.kb-balance-logo {
+    position: absolute;
+    right: 32px; bottom: 24px;
+    font-family: var(--font-serif);
+    font-size: 5rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.08);
+    line-height: 1;
+    pointer-events: none;
+}
+
+/* ============================================================
+   QUICK ACTIONS
+   ============================================================ */
+.kb-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+}
+
+.kb-quick-action {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    color: var(--charcoal);
+}
+.kb-quick-action:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+    border-color: transparent;
+    color: var(--charcoal);
+}
+
+.kb-qa-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+}
+.kb-qa-green  { background: #e8f5e9; color: #2e7d32; }
+.kb-qa-red    { background: #ffebee; color: var(--red); }
+.kb-qa-blue   { background: #e3f2fd; color: #1565c0; }
+.kb-qa-gold   { background: var(--gold-light); color: #92710e; }
+.kb-qa-purple { background: #f3e5f5; color: #6a1b9a; }
+.kb-qa-dark   { background: var(--grey-light); color: var(--charcoal); }
+
+.kb-quick-action span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* ============================================================
+   DASHBOARD GRID CARDS
+   ============================================================ */
+.kb-dash-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+}
+
+.kb-dash-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.kb-dash-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.kb-dash-card-header h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--charcoal);
+}
+.kb-dash-card-header h3 i { color: var(--red); }
+
+.kb-link-sm { font-size: 0.8rem; color: var(--red); font-weight: 600; }
+.kb-link-sm:hover { color: var(--red-dark); }
+
+/* ============================================================
+   TRANSACTION LIST IN DASHBOARD
+   ============================================================ */
+.kb-txn-list {
+    padding: 8px 0;
+}
+
+.kb-txn-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--grey-light);
+    transition: var(--transition);
+}
+.kb-txn-row:last-child { border-bottom: none; }
+.kb-txn-row:hover { background: var(--grey-light); }
+
+.kb-txn-icon-wrap {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.kb-txn-deposit     { background: #e8f5e9; color: #2e7d32; }
+.kb-txn-withdraw    { background: #ffebee; color: var(--red); }
+.kb-txn-transfer-out { background: #fff3e0; color: #e65100; }
+.kb-txn-transfer-in  { background: #e3f2fd; color: #1565c0; }
+
+.kb-txn-details { flex: 1; }
+.kb-txn-type { display: block; font-size: 0.875rem; font-weight: 600; }
+.kb-txn-date { font-size: 0.75rem; color: var(--grey); }
+
+.kb-txn-amount {
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Chart legend */
+.kb-chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 0.8rem;
+    color: var(--grey);
+}
+.kb-legend-dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+}
+.kb-legend-green { background: rgba(46,125,50,0.7); }
+.kb-legend-red   { background: rgba(183,28,28,0.7); }
+
+#spendingChart { padding: 24px; }
+
+/* ============================================================
+   NOTIFICATIONS IN DASHBOARD
+   ============================================================ */
+.kb-notifications-card {}
+
+.kb-notif-list { list-style: none; padding: 0 24px; }
+.kb-notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--grey-light);
+}
+.kb-notif-item:last-child { border-bottom: none; }
+
+.kb-notif-dot-indicator {
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+.kb-notif-item p { font-size: 0.875rem; margin-bottom: 2px; }
+.kb-notif-item small { font-size: 0.75rem; color: var(--grey); }
+
+/* ============================================================
+   RESPONSIVE DASHBOARD
+   ============================================================ */
+@media (max-width: 1100px) {
+    .kb-quick-actions { grid-template-columns: repeat(3, 1fr); }
+    .kb-dash-grid     { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    .kb-sidebar       { transform: translateX(-100%); }
+    .kb-sidebar.open  { transform: translateX(0); }
+    .kb-dash-main     { margin-left: 0; padding: 20px 16px; }
+    .kb-sidebar-toggle { display: flex; }
+    .kb-quick-actions { grid-template-columns: repeat(3, 1fr); }
+    .kb-balance-card  { flex-direction: column; gap: 16px; }
+    .kb-admin-stats   { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+    .kb-quick-actions { grid-template-columns: repeat(2, 1fr); }
+    .kb-admin-stats   { grid-template-columns: 1fr; }
+}

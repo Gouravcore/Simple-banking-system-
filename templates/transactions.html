@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Transaction History – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header">
+        <div class="kb-container">
+            <h1><i class="fas fa-history"></i> Transaction History</h1>
+            <p>Account: {{ account.account_number }} | Balance: ₹{{ "{:,.2f}".format(account.balance) }}</p>
+        </div>
+    </div>
+
+    <div class="kb-container">
+        <!-- Filters -->
+        <div class="kb-filter-bar">
+            <form method="GET" class="kb-filter-form">
+                <div class="kb-filter-group">
+                    <label>Transaction Type</label>
+                    <select name="type" onchange="this.form.submit()">
+                        <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All Types</option>
+                        <option value="deposit" {% if filter_type == 'deposit' %}selected{% endif %}>Deposits</option>
+                        <option value="withdrawal" {% if filter_type == 'withdrawal' %}selected{% endif %}>Withdrawals</option>
+                        <option value="transfer_out" {% if filter_type == 'transfer_out' %}selected{% endif %}>Transfers Sent</option>
+                        <option value="transfer_in" {% if filter_type == 'transfer_in' %}selected{% endif %}>Transfers Received</option>
+                    </select>
+                </div>
+                <div class="kb-filter-group">
+                    <label>Date</label>
+                    <input type="date" name="date" value="{{ filter_date }}" onchange="this.form.submit()">
+                </div>
+                <a href="{{ url_for('transactions') }}" class="kb-btn-ghost-sm">Clear Filters</a>
+            </form>
+
+            <a href="{{ url_for('download_statement') }}" class="kb-btn-outline-sm">
+                <i class="fas fa-file-pdf"></i> Download PDF
+            </a>
+        </div>
+
+        <!-- Transactions Table -->
+        {% if transactions %}
+        <div class="kb-table-wrapper">
+            <table class="kb-table">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Balance After</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for txn in transactions %}
+                    <tr>
+                        <td><code class="kb-txn-id">{{ txn.transaction_id }}</code></td>
+                        <td>
+                            <span class="kb-badge-type
+                                {% if txn.transaction_type == 'deposit' %}kb-badge-deposit
+                                {% elif txn.transaction_type == 'withdrawal' %}kb-badge-withdraw
+                                {% elif txn.transaction_type == 'transfer_out' %}kb-badge-transfer-out
+                                {% else %}kb-badge-transfer-in{% endif %}">
+                                <i class="fas
+                                    {% if txn.transaction_type == 'deposit' %}fa-arrow-down
+                                    {% elif txn.transaction_type == 'withdrawal' %}fa-arrow-up
+                                    {% elif txn.transaction_type == 'transfer_out' %}fa-paper-plane
+                                    {% else %}fa-inbox{% endif %}">
+                                </i>
+                                {{ txn.transaction_type.replace('_', ' ').title() }}
+                            </span>
+                        </td>
+                        <td>{{ txn.description or '—' }}</td>
+                        <td class="{% if txn.transaction_type in ['deposit', 'transfer_in'] %}kb-amount-credit{% else %}kb-amount-debit{% endif %}">
+                            {% if txn.transaction_type in ['deposit', 'transfer_in'] %}+{% else %}−{% endif %}
+                            ₹{{ "{:,.2f}".format(txn.amount) }}
+                        </td>
+                        <td>₹{{ "{:,.2f}".format(txn.balance_after) }}</td>
+                        <td>{{ txn.created_at[:16] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="kb-empty-state kb-empty-state--page">
+            <i class="fas fa-receipt"></i>
+            <h3>No Transactions Found</h3>
+            <p>{% if filter_type != 'all' or filter_date %}No transactions match your filter criteria.{% else %}You haven't made any transactions yet.{% endif %}</p>
+            <a href="{{ url_for('deposit') }}" class="kb-btn-primary">Make Your First Deposit</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

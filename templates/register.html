@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}Register – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-auth-page">
+    <div class="kb-auth-left">
+        <div class="kb-auth-brand">
+            <div class="kb-logo-mark kb-logo-mark--xl">K</div>
+            <h1>KUBERA BANK</h1>
+            <p>Your Wealth, Our Responsibility.</p>
+        </div>
+        <div class="kb-auth-features">
+            <div class="kb-auth-feature"><i class="fas fa-bolt"></i> Instant account opening</div>
+            <div class="kb-auth-feature"><i class="fas fa-shield-alt"></i> Bank-grade security</div>
+            <div class="kb-auth-feature"><i class="fas fa-mobile-alt"></i> 24×7 digital access</div>
+            <div class="kb-auth-feature"><i class="fas fa-hand-holding-usd"></i> Easy loans & credit cards</div>
+        </div>
+    </div>
+
+    <div class="kb-auth-right">
+        <div class="kb-auth-box">
+            <div class="kb-auth-header">
+                <h2>Open Your Account</h2>
+                <p>Join thousands of happy Kubera Bank customers.</p>
+            </div>
+
+            <form action="{{ url_for('register') }}" method="POST" class="kb-form" novalidate>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="kb-form-group">
+                    <label for="full_name">
+                        <i class="fas fa-user"></i> Full Name
+                    </label>
+                    <input type="text" id="full_name" name="full_name"
+                           placeholder="Enter your full name"
+                           required minlength="2" maxlength="100">
+                    <span class="kb-field-error" id="nameError"></span>
+                </div>
+
+                <div class="kb-form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <input type="email" id="email" name="email"
+                           placeholder="your@email.com" required>
+                    <span class="kb-field-error" id="emailError"></span>
+                </div>
+
+                <div class="kb-form-group">
+                    <label for="phone">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    <input type="tel" id="phone" name="phone"
+                           placeholder="10-digit mobile number"
+                           required pattern="[0-9]{10}" maxlength="10">
+                    <span class="kb-field-error" id="phoneError"></span>
+                </div>
+
+                <div class="kb-form-row">
+                    <div class="kb-form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                        <div class="kb-input-pw">
+                            <input type="password" id="password" name="password"
+                                   placeholder="Min. 6 characters" required minlength="6">
+                            <button type="button" class="kb-pw-toggle" data-target="password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label for="confirm_password">
+                            <i class="fas fa-lock"></i> Confirm Password
+                        </label>
+                        <div class="kb-input-pw">
+                            <input type="password" id="confirm_password" name="confirm_password"
+                                   placeholder="Repeat password" required>
+                            <button type="button" class="kb-pw-toggle" data-target="confirm_password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="kb-field-error" id="pwError"></span>
+                    </div>
+                </div>
+
+                <!-- Password strength -->
+                <div class="kb-pw-strength" id="pwStrength">
+                    <div class="kb-pw-bar" id="pwBar"></div>
+                    <span id="pwLabel">Password strength</span>
+                </div>
+
+                <div class="kb-form-check">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
+                </div>
+
+                <button type="submit" class="kb-btn-primary kb-btn-full" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <p class="kb-auth-switch">
+                Already have an account?
+                <a href="{{ url_for('login') }}">Sign In</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Password strength checker
+const pwInput = document.getElementById('password');
+const pwBar   = document.getElementById('pwBar');
+const pwLabel = document.getElementById('pwLabel');
+
+pwInput.addEventListener('input', function() {
+    const val = this.value;
+    let strength = 0;
+    if (val.length >= 6) strength++;
+    if (val.length >= 10) strength++;
+    if (/[A-Z]/.test(val)) strength++;
+    if (/[0-9]/.test(val)) strength++;
+    if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+    const levels = ['', 'Very Weak', 'Weak', 'Fair', 'Strong', 'Very Strong'];
+    const colors = ['', '#e53935', '#ff7043', '#ffa000', '#43a047', '#1b5e20'];
+    const widths = ['0%', '20%', '40%', '60%', '80%', '100%'];
+
+    pwBar.style.width    = widths[strength] || '0%';
+    pwBar.style.backgroundColor = colors[strength] || '#ccc';
+    pwLabel.textContent  = levels[strength] || '';
+});
+
+// Password toggle
+document.querySelectorAll('.kb-pw-toggle').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const id  = this.dataset.target;
+        const inp = document.getElementById(id);
+        const ico = this.querySelector('i');
+        if (inp.type === 'password') {
+            inp.type  = 'text';
+            ico.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            inp.type  = 'password';
+            ico.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    });
+});
+
+// Confirm password match
+document.getElementById('confirm_password').addEventListener('input', function() {
+    const err = document.getElementById('pwError');
+    if (this.value && this.value !== pwInput.value) {
+        err.textContent = 'Passwords do not match';
+    } else {
+        err.textContent = '';
+    }
+});
+</script>
+{% endblock %}

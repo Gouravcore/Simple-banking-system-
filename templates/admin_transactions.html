@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}All Transactions – Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header kb-page-header--dark">
+        <div class="kb-container">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                    <h1><i class="fas fa-history"></i> All Transactions</h1>
+                    <p>Last 100 transactions across all accounts</p>
+                </div>
+                <a href="{{ url_for('admin_dashboard') }}" class="kb-btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="kb-container">
+        <div class="kb-table-wrapper">
+            <table class="kb-table">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Customer</th>
+                        <th>Account No.</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Balance After</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for txn in transactions %}
+                    <tr>
+                        <td><code class="kb-txn-id">{{ txn.transaction_id }}</code></td>
+                        <td>{{ txn.full_name }}</td>
+                        <td>{{ txn.account_number }}</td>
+                        <td>
+                            <span class="kb-badge-type
+                                {% if txn.transaction_type == 'deposit' %}kb-badge-deposit
+                                {% elif txn.transaction_type == 'withdrawal' %}kb-badge-withdraw
+                                {% elif txn.transaction_type == 'transfer_out' %}kb-badge-transfer-out
+                                {% else %}kb-badge-transfer-in{% endif %}">
+                                {{ txn.transaction_type.replace('_', ' ').title() }}
+                            </span>
+                        </td>
+                        <td class="{% if txn.transaction_type in ['deposit', 'transfer_in'] %}kb-amount-credit{% else %}kb-amount-debit{% endif %}">
+                            ₹{{ "{:,.2f}".format(txn.amount) }}
+                        </td>
+                        <td>₹{{ "{:,.2f}".format(txn.balance_after) }}</td>
+                        <td>{{ txn.description or '—' }}</td>
+                        <td>{{ txn.created_at[:16] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

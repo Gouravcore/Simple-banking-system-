@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – Kubera Bank{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="kb-dash-layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="kb-sidebar" id="sidebar">
+        <div class="kb-sidebar-header">
+            <div class="kb-sidebar-avatar">
+                {{ session.get('user_name', 'U')[0].upper() }}
+            </div>
+            <div class="kb-sidebar-info">
+                <strong>{{ session.get('user_name', 'User') }}</strong>
+                <span>{{ session.get('customer_id', '') }}</span>
+            </div>
+        </div>
+
+        <nav class="kb-sidebar-nav">
+            <a href="{{ url_for('dashboard') }}" class="kb-sidebar-link active">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            {% if account %}
+            <a href="{{ url_for('deposit') }}" class="kb-sidebar-link">
+                <i class="fas fa-arrow-circle-down"></i> Deposit
+            </a>
+            <a href="{{ url_for('withdraw') }}" class="kb-sidebar-link">
+                <i class="fas fa-arrow-circle-up"></i> Withdraw
+            </a>
+            <a href="{{ url_for('transfer') }}" class="kb-sidebar-link">
+                <i class="fas fa-exchange-alt"></i> Transfer
+            </a>
+            <a href="{{ url_for('transactions') }}" class="kb-sidebar-link">
+                <i class="fas fa-history"></i> History
+            </a>
+            {% else %}
+            <a href="{{ url_for('open_account') }}" class="kb-sidebar-link kb-sidebar-link--highlight">
+                <i class="fas fa-university"></i> Open Account
+            </a>
+            {% endif %}
+            <a href="{{ url_for('loans') }}" class="kb-sidebar-link">
+                <i class="fas fa-hand-holding-usd"></i> Loans
+            </a>
+            <a href="{{ url_for('credit_cards') }}" class="kb-sidebar-link">
+                <i class="fas fa-credit-card"></i> Credit Cards
+            </a>
+            <a href="{{ url_for('notifications') }}" class="kb-sidebar-link">
+                <i class="fas fa-bell"></i> Notifications
+                {% if notification_count > 0 %}
+                <span class="kb-sidebar-badge">{{ notification_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('profile') }}" class="kb-sidebar-link">
+                <i class="fas fa-cog"></i> Profile
+            </a>
+            {% if account %}
+            <a href="{{ url_for('download_statement') }}" class="kb-sidebar-link">
+                <i class="fas fa-file-pdf"></i> Statement
+            </a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="kb-sidebar-link kb-sidebar-link--logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Mobile sidebar toggle -->
+    <button class="kb-sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="kb-dash-main">
+
+        <!-- Welcome bar -->
+        <div class="kb-dash-topbar">
+            <div>
+                <h1 class="kb-dash-welcome">
+                    Good {% if now_hour < 12 %}Morning{% elif now_hour < 17 %}Afternoon{% else %}Evening{% endif %},
+                    {{ session.get('user_name', 'User').split()[0] }}! 👋
+                </h1>
+                <p class="kb-dash-date">{{ now_date }}</p>
+            </div>
+            <div class="kb-dash-actions">
+                <a href="{{ url_for('notifications') }}" class="kb-topbar-icon" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    {% if notification_count > 0 %}
+                    <span class="kb-notif-dot">{{ notification_count }}</span>
+                    {% endif %}
+                </a>
+                <a href="{{ url_for('profile') }}" class="kb-topbar-icon" title="Profile">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            </div>
+        </div>
+
+        {% if not account %}
+        <!-- No Account Yet -->
+        <div class="kb-no-account">
+            <div class="kb-no-account-icon"><i class="fas fa-university"></i></div>
+            <h3>No Bank Account Yet</h3>
+            <p>Open your first bank account to start banking with Kubera Bank.</p>
+            <a href="{{ url_for('open_account') }}" class="kb-btn-primary">
+                <i class="fas fa-plus-circle"></i> Open Account Now
+            </a>
+        </div>
+        {% else %}
+
+        <!-- ===== BALANCE CARD ===== -->
+        <div class="kb-balance-card">
+            <div class="kb-balance-left">
+                <span class="kb-balance-label">Available Balance</span>
+                <div class="kb-balance-amount" id="balanceDisplay">
+                    ₹{{ "{:,.2f}".format(account.balance) }}
+                </div>
+                <div class="kb-balance-meta">
+                    <span><i class="fas fa-hashtag"></i> {{ account.account_number }}</span>
+                    <span class="kb-acc-type-badge">{{ account.account_type }}</span>
+                </div>
+            </div>
+            <div class="kb-balance-right">
+                <div class="kb-balance-pattern"></div>
+                <div class="kb-balance-logo">K</div>
+            </div>
+        </div>
+
+        <!-- ===== QUICK ACTIONS ===== -->
+        <div class="kb-quick-actions">
+            <a href="{{ url_for('deposit') }}" class="kb-quick-action">
+                <div class="kb-qa-icon kb-qa-green"><i class="fas fa-plus-circle"></i></div>
+                <span>Deposit</span>
+            </a>
+            <a href="{{ url_for('withdraw') }}" class="kb-quick-action">
+                <div class="kb-qa-icon kb-qa-red"><i class="fas fa-minus-circle"></i></div>
+                <span>Withdraw</span>
+            </a>
+            <a href="{{ url_for('transfer') }}" class="kb-quick-action">
+                <div class="kb-qa-icon kb-qa-blue"><i class="fas fa-exchange-alt"></i></div>
+                <span>Transfer</span>
+            </a>
+            <a href="{{ url_for('transactions') }}" class="kb-quick-action">
+                <div class="kb-qa-icon kb-qa-gold"><i class="fas fa-history"></i></div>
+                <span>History</span>
+            </a>
+            <a href="{{ url_for('loans') }}" class="kb-quick-action">
+                <div class="kb-qa-icon kb-qa-purple"><i class="fas fa-hand-holding-usd"></i></div>
+                <span>Loans</span>
+            </a>
+            <a href="{{ url_for('credit_cards') }}" class="kb-quick-action">
+                <div class="kb-qa-icon kb-qa-dark"><i class="fas fa-credit-card"></i></div>
+                <span>Cards</span>
+            </a>
+        </div>
+
+        <!-- ===== TWO-COLUMN: Transactions + Chart ===== -->
+        <div class="kb-dash-grid">
+
+            <!-- Recent Transactions -->
+            <div class="kb-dash-card">
+                <div class="kb-dash-card-header">
+                    <h3><i class="fas fa-history"></i> Recent Transactions</h3>
+                    <a href="{{ url_for('transactions') }}" class="kb-link-sm">View all</a>
+                </div>
+
+                {% if recent_transactions %}
+                <div class="kb-txn-list">
+                    {% for txn in recent_transactions %}
+                    <div class="kb-txn-row">
+                        <div class="kb-txn-icon-wrap
+                            {% if txn.transaction_type == 'deposit' %}kb-txn-deposit
+                            {% elif txn.transaction_type == 'withdrawal' %}kb-txn-withdraw
+                            {% elif txn.transaction_type == 'transfer_out' %}kb-txn-transfer-out
+                            {% else %}kb-txn-transfer-in{% endif %}">
+                            <i class="fas
+                                {% if txn.transaction_type == 'deposit' %}fa-arrow-down
+                                {% elif txn.transaction_type == 'withdrawal' %}fa-arrow-up
+                                {% elif txn.transaction_type == 'transfer_out' %}fa-paper-plane
+                                {% else %}fa-inbox{% endif %}">
+                            </i>
+                        </div>
+                        <div class="kb-txn-details">
+                            <span class="kb-txn-type">{{ txn.transaction_type.replace('_', ' ').title() }}</span>
+                            <span class="kb-txn-date">{{ txn.created_at[:16] }}</span>
+                        </div>
+                        <div class="kb-txn-amount
+                            {% if txn.transaction_type in ['deposit', 'transfer_in'] %}kb-amount-credit{% else %}kb-amount-debit{% endif %}">
+                            {% if txn.transaction_type in ['deposit', 'transfer_in'] %}+{% else %}−{% endif %}
+                            ₹{{ "{:,.2f}".format(txn.amount) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="kb-empty-state">
+                    <i class="fas fa-receipt"></i>
+                    <p>No transactions yet. Make your first deposit!</p>
+                    <a href="{{ url_for('deposit') }}" class="kb-btn-outline-sm">Deposit Now</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Spending Chart -->
+            <div class="kb-dash-card">
+                <div class="kb-dash-card-header">
+                    <h3><i class="fas fa-chart-bar"></i> Financial Overview</h3>
+                </div>
+                <canvas id="spendingChart" height="220"></canvas>
+                <div class="kb-chart-legend">
+                    <span class="kb-legend-dot kb-legend-green"></span> Credits
+                    <span class="kb-legend-dot kb-legend-red"></span> Debits
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== NOTIFICATIONS ===== -->
+        {% if notifications %}
+        <div class="kb-dash-card kb-notifications-card">
+            <div class="kb-dash-card-header">
+                <h3><i class="fas fa-bell"></i> Recent Notifications</h3>
+                <a href="{{ url_for('notifications') }}" class="kb-link-sm">View all</a>
+            </div>
+            <ul class="kb-notif-list">
+                {% for n in notifications[:4] %}
+                <li class="kb-notif-item">
+                    <span class="kb-notif-dot-indicator"></span>
+                    <div>
+                        <p>{{ n.message }}</p>
+                        <small>{{ n.created_at[:16] }}</small>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% endif %}{# end if account #}
+    </main>
+</div>
+
+<!-- Chatbot Trigger -->
+<div class="kb-chatbot-trigger" id="chatbotTrigger" title="Banking Assistant">
+    <i class="fas fa-comments"></i>
+</div>
+
+<!-- Chatbot Window -->
+<div class="kb-chatbot-window" id="chatbotWindow">
+    <div class="kb-chatbot-header">
+        <div class="kb-chatbot-avatar"><i class="fas fa-robot"></i></div>
+        <div>
+            <strong>Kubera Assistant</strong>
+            <span class="kb-chatbot-status">Online</span>
+        </div>
+        <button id="chatbotClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="kb-chatbot-messages" id="chatMessages">
+        <div class="kb-chat-msg kb-chat-bot">
+            <div class="kb-chat-bubble">👋 Hello {{ session.get('user_name', 'there').split()[0] }}! How can I help you with your banking today?</div>
+        </div>
+    </div>
+    <div class="kb-chatbot-input">
+        <input type="text" id="chatInput" placeholder="Ask me anything..." />
+        <button id="chatSend"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+// Pass greeting data
+const nowHour = {{ now_hour }};
+</script>
+{% endblock %}

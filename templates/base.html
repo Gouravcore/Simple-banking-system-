@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kubera Bank – Your Wealth, Our Responsibility{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="kb-navbar" id="mainNav">
+    <div class="kb-nav-container">
+        <!-- Logo -->
+        <a href="{{ url_for('index') }}" class="kb-logo-link">
+            <div class="kb-logo-mark">K</div>
+            <div class="kb-logo-text">
+                <span class="kb-logo-name">KUBERA</span>
+                <span class="kb-logo-sub">BANK</span>
+            </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <ul class="kb-nav-links" id="navLinks">
+            {% if session.get('user_id') %}
+                {% if session.get('is_admin') %}
+                    <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Admin Panel</a></li>
+                    <li><a href="{{ url_for('admin_customers') }}"><i class="fas fa-users"></i> Customers</a></li>
+                    <li><a href="{{ url_for('admin_transactions') }}"><i class="fas fa-list"></i> Transactions</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('dashboard') }}"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('transactions') }}"><i class="fas fa-history"></i> History</a></li>
+                    <li><a href="{{ url_for('loans') }}"><i class="fas fa-hand-holding-usd"></i> Loans</a></li>
+                    <li><a href="{{ url_for('credit_cards') }}"><i class="fas fa-credit-card"></i> Cards</a></li>
+                {% endif %}
+                <li class="kb-nav-user">
+                    <span><i class="fas fa-user-circle"></i> {{ session.get('user_name', '').split()[0] }}</span>
+                    <ul class="kb-dropdown">
+                        {% if not session.get('is_admin') %}
+                        <li><a href="{{ url_for('profile') }}"><i class="fas fa-cog"></i> Profile</a></li>
+                        <li><a href="{{ url_for('notifications') }}"><i class="fas fa-bell"></i> Notifications</a></li>
+                        <li><a href="{{ url_for('download_statement') }}"><i class="fas fa-file-pdf"></i> Statement</a></li>
+                        {% endif %}
+                        <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li><a href="{{ url_for('index') }}#services">Services</a></li>
+                <li><a href="{{ url_for('index') }}#about">About</a></li>
+                <li><a href="{{ url_for('login') }}" class="kb-btn-outline-nav">Login</a></li>
+                <li><a href="{{ url_for('register') }}" class="kb-btn-nav">Open Account</a></li>
+            {% endif %}
+        </ul>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="kb-hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="kb-flash-container">
+        {% for category, message in messages %}
+        <div class="kb-alert kb-alert-{{ category }}">
+            <i class="fas {% if category == 'success' %}fa-check-circle{% elif category == 'danger' %}fa-exclamation-circle{% elif category == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}"></i>
+            {{ message }}
+            <button class="kb-alert-close" onclick="this.parentElement.remove()">×</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}
+
+<!-- Page Content -->
+{% block content %}{% endblock %}
+
+<!-- ===== FOOTER ===== -->
+<footer class="kb-footer">
+    <div class="kb-footer-inner">
+        <div class="kb-footer-grid">
+            <!-- Brand -->
+            <div class="kb-footer-brand">
+                <div class="kb-logo-mark kb-logo-mark--light">K</div>
+                <h3>KUBERA BANK</h3>
+                <p>Your Wealth, Our Responsibility.</p>
+                <div class="kb-footer-social">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <!-- Services -->
+            <div class="kb-footer-col">
+                <h4>Banking Services</h4>
+                <ul>
+                    <li><a href="{{ url_for('register') }}">Open Account</a></li>
+                    <li><a href="#">Deposits</a></li>
+                    <li><a href="#">Money Transfer</a></li>
+                    <li><a href="#">Loans</a></li>
+                    <li><a href="#">Credit Cards</a></li>
+                </ul>
+            </div>
+
+            <!-- Legal -->
+            <div class="kb-footer-col">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div class="kb-footer-col">
+                <h4>Contact</h4>
+                <ul class="kb-footer-contact">
+                    <li><i class="fas fa-map-marker-alt"></i> 24 Kubera Nagar, Mumbai 400001</li>
+                    <li><i class="fas fa-phone"></i> 1800-KUBERA (Toll-Free)</li>
+                    <li><i class="fas fa-envelope"></i> care@kuberabank.com</li>
+                    <li><i class="fas fa-clock"></i> 24×7 Digital Banking</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="kb-footer-bottom">
+            <p>&copy; 2024 Kubera Bank. All rights reserved. | A College Micro Project.</p>
+            <p class="kb-footer-disclaimer">
+                <i class="fas fa-shield-alt"></i>
+                This is a simulated banking application for educational purposes only. No real financial transactions are processed.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+<!-- Main JS -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

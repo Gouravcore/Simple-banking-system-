@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}All Customers – Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header kb-page-header--dark">
+        <div class="kb-container">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                    <h1><i class="fas fa-users"></i> All Customers</h1>
+                    <p>Total: {{ customers|length }} registered customers</p>
+                </div>
+                <a href="{{ url_for('admin_dashboard') }}" class="kb-btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="kb-container">
+        <div class="kb-table-wrapper">
+            <table class="kb-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Customer ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Account No.</th>
+                        <th>Type</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in customers %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td><code>{{ c.customer_id }}</code></td>
+                        <td>{{ c.full_name }}</td>
+                        <td>{{ c.email }}</td>
+                        <td>{{ c.phone }}</td>
+                        <td>{{ c.account_number or '—' }}</td>
+                        <td>{{ c.account_type or '—' }}</td>
+                        <td>{% if c.balance is not none %}₹{{ "{:,.2f}".format(c.balance) }}{% else %}No Account{% endif %}</td>
+                        <td>
+                            {% if c.is_active %}
+                            <span class="kb-badge-active">Active</span>
+                            {% elif c.account_number %}
+                            <span class="kb-badge-inactive">Inactive</span>
+                            {% else %}
+                            <span class="kb-badge-warn">No Account</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ c.created_at[:10] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

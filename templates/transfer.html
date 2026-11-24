@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Transfer Money – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header kb-page-header--blue">
+        <div class="kb-container">
+            <h1><i class="fas fa-exchange-alt"></i> Transfer Money</h1>
+            <p>Send money to any Kubera Bank account instantly and securely.</p>
+        </div>
+    </div>
+
+    <div class="kb-container kb-form-page">
+        <div class="kb-txn-layout">
+            <div class="kb-form-card">
+                <form action="{{ url_for('transfer') }}" method="POST" class="kb-form" id="transferForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="kb-mini-balance-card">
+                        <div class="kb-mini-balance-left">
+                            <span>Your Balance</span>
+                            <strong>₹{{ "{:,.2f}".format(account.balance) }}</strong>
+                        </div>
+                        <div class="kb-mini-balance-right">
+                            <span>From Account</span>
+                            <small>{{ account.account_number }}</small>
+                        </div>
+                    </div>
+
+                    <div class="kb-transfer-flow">
+                        <div class="kb-transfer-from">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Your Account<br><strong>{{ account.account_number }}</strong></span>
+                        </div>
+                        <div class="kb-transfer-arrow">
+                            <i class="fas fa-long-arrow-alt-right"></i>
+                        </div>
+                        <div class="kb-transfer-to">
+                            <i class="fas fa-user-circle kb-icon-grey"></i>
+                            <span>Recipient<br><strong id="recipientPreview">?</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label for="receiver_account">
+                            <i class="fas fa-hashtag"></i> Recipient Account Number
+                        </label>
+                        <input type="text" id="receiver_account" name="receiver_account"
+                               placeholder="Enter 12-digit account number"
+                               pattern="[0-9]{12}" maxlength="12" required>
+                        <small class="kb-hint">Enter the recipient's Kubera Bank account number</small>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label for="amount">
+                            <i class="fas fa-rupee-sign"></i> Transfer Amount
+                        </label>
+                        <div class="kb-amount-input-wrap">
+                            <span class="kb-currency-prefix">₹</span>
+                            <input type="number" id="amount" name="amount"
+                                   placeholder="0.00" min="1"
+                                   max="{{ account.balance }}"
+                                   step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label for="description">
+                            <i class="fas fa-comment"></i> Remarks (optional)
+                        </label>
+                        <input type="text" id="description" name="description"
+                               placeholder="e.g. Rent, Payment, Gift"
+                               value="Fund Transfer" maxlength="100">
+                    </div>
+
+                    <button type="submit" class="kb-btn-primary kb-btn-full">
+                        <i class="fas fa-paper-plane"></i> Transfer Now
+                    </button>
+                    <a href="{{ url_for('dashboard') }}" class="kb-btn-ghost">Back to Dashboard</a>
+                </form>
+            </div>
+
+            <div class="kb-txn-info-panel">
+                <div class="kb-info-box">
+                    <h4><i class="fas fa-bolt"></i> Instant Transfer</h4>
+                    <ul>
+                        <li>Processing time: <strong>Instant</strong></li>
+                        <li>Available balance: <strong>₹{{ "{:,.2f}".format(account.balance) }}</strong></li>
+                        <li>Transaction fee: <strong>Free</strong></li>
+                        <li>Available: <strong>24 × 7</strong></li>
+                    </ul>
+                </div>
+                <div class="kb-info-box kb-info-box--warn">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Important</h4>
+                    <p>Please verify the recipient's account number before transferring. Transfers cannot be reversed.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const availableBalance = {{ account.balance }};
+
+// Update recipient preview
+document.getElementById('receiver_account').addEventListener('input', function() {
+    const val = this.value.trim();
+    document.getElementById('recipientPreview').textContent = val || '?';
+});
+
+document.getElementById('transferForm').addEventListener('submit', function(e) {
+    const amount   = parseFloat(document.getElementById('amount').value);
+    const receiver = document.getElementById('receiver_account').value.trim();
+
+    if (!receiver || receiver.length !== 12) {
+        e.preventDefault();
+        alert('Please enter a valid 12-digit account number.');
+        return;
+    }
+    if (isNaN(amount) || amount <= 0) {
+        e.preventDefault();
+        alert('Please enter a valid amount.');
+        return;
+    }
+    if (amount > availableBalance) {
+        e.preventDefault();
+        alert('Insufficient balance! Available: ₹' + availableBalance.toFixed(2));
+        return;
+    }
+    if (!confirm(`Transfer ₹${amount.toFixed(2)} to account ${receiver}?`)) {
+        e.preventDefault();
+    }
+});
+</script>
+{% endblock %}

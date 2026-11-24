@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard – Kubera Bank{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="kb-dash-layout">
+    <!-- Admin Sidebar -->
+    <aside class="kb-sidebar kb-sidebar--admin" id="sidebar">
+        <div class="kb-sidebar-header">
+            <div class="kb-sidebar-avatar kb-avatar-admin">A</div>
+            <div class="kb-sidebar-info">
+                <strong>Admin Panel</strong>
+                <span>Kubera Bank</span>
+            </div>
+        </div>
+        <nav class="kb-sidebar-nav">
+            <a href="{{ url_for('admin_dashboard') }}" class="kb-sidebar-link active">
+                <i class="fas fa-tachometer-alt"></i> Overview
+            </a>
+            <a href="{{ url_for('admin_customers') }}" class="kb-sidebar-link">
+                <i class="fas fa-users"></i> Customers
+            </a>
+            <a href="{{ url_for('admin_transactions') }}" class="kb-sidebar-link">
+                <i class="fas fa-history"></i> Transactions
+            </a>
+            <a href="{{ url_for('logout') }}" class="kb-sidebar-link kb-sidebar-link--logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <button class="kb-sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+
+    <main class="kb-dash-main">
+        <div class="kb-dash-topbar">
+            <div>
+                <h1 class="kb-dash-welcome">Admin Dashboard</h1>
+                <p class="kb-dash-date">Kubera Bank Management Portal</p>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="kb-admin-stats">
+            <div class="kb-admin-stat-card">
+                <div class="kb-admin-stat-icon kb-stat-blue"><i class="fas fa-users"></i></div>
+                <div>
+                    <div class="kb-admin-stat-num">{{ total_customers }}</div>
+                    <div class="kb-admin-stat-label">Total Customers</div>
+                </div>
+            </div>
+            <div class="kb-admin-stat-card">
+                <div class="kb-admin-stat-icon kb-stat-green"><i class="fas fa-university"></i></div>
+                <div>
+                    <div class="kb-admin-stat-num">{{ total_accounts }}</div>
+                    <div class="kb-admin-stat-label">Total Accounts</div>
+                </div>
+            </div>
+            <div class="kb-admin-stat-card">
+                <div class="kb-admin-stat-icon kb-stat-gold"><i class="fas fa-exchange-alt"></i></div>
+                <div>
+                    <div class="kb-admin-stat-num">{{ total_transactions }}</div>
+                    <div class="kb-admin-stat-label">Total Transactions</div>
+                </div>
+            </div>
+            <div class="kb-admin-stat-card">
+                <div class="kb-admin-stat-icon kb-stat-red"><i class="fas fa-rupee-sign"></i></div>
+                <div>
+                    <div class="kb-admin-stat-num">₹{{ "{:,.0f}".format(total_deposits) }}</div>
+                    <div class="kb-admin-stat-label">Total Deposits</div>
+                </div>
+            </div>
+            <div class="kb-admin-stat-card">
+                <div class="kb-admin-stat-icon kb-stat-purple"><i class="fas fa-hand-holding-usd"></i></div>
+                <div>
+                    <div class="kb-admin-stat-num">{{ pending_loans }}</div>
+                    <div class="kb-admin-stat-label">Pending Loans</div>
+                </div>
+            </div>
+            <div class="kb-admin-stat-card">
+                <div class="kb-admin-stat-icon kb-stat-dark"><i class="fas fa-credit-card"></i></div>
+                <div>
+                    <div class="kb-admin-stat-num">{{ pending_cards }}</div>
+                    <div class="kb-admin-stat-label">Pending Cards</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Loan Applications -->
+        <div class="kb-dash-card">
+            <div class="kb-dash-card-header">
+                <h3><i class="fas fa-hand-holding-usd"></i> Pending Loan Applications</h3>
+            </div>
+            {% if pending_loan_apps %}
+            <div class="kb-table-wrapper">
+                <table class="kb-table">
+                    <thead>
+                        <tr>
+                            <th>App ID</th>
+                            <th>Customer</th>
+                            <th>Loan Type</th>
+                            <th>Amount</th>
+                            <th>Income/mo</th>
+                            <th>Duration</th>
+                            <th>Applied</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loan in pending_loan_apps %}
+                        <tr>
+                            <td><code>{{ loan.application_id }}</code></td>
+                            <td>{{ loan.full_name }}<br><small>{{ loan.email }}</small></td>
+                            <td>{{ loan.loan_type }}</td>
+                            <td>₹{{ "{:,.0f}".format(loan.amount) }}</td>
+                            <td>₹{{ "{:,.0f}".format(loan.monthly_income) }}</td>
+                            <td>{{ loan.duration_months }} months</td>
+                            <td>{{ loan.created_at[:10] }}</td>
+                            <td class="kb-action-cell">
+                                <form action="{{ url_for('admin_loan_action', app_id=loan.id, action='approve') }}" method="POST" style="display:inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="note" value="Your loan has been approved. Funds will be disbursed within 3 business days.">
+                                    <button type="submit" class="kb-btn-xs kb-btn-approve" onclick="return confirm('Approve this loan?')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                </form>
+                                <button class="kb-btn-xs kb-btn-reject" onclick="showRejectModal('loan', {{ loan.id }})">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="kb-empty-state"><i class="fas fa-check-circle"></i><p>No pending loan applications.</p></div>
+            {% endif %}
+        </div>
+
+        <!-- Pending Credit Card Applications -->
+        <div class="kb-dash-card">
+            <div class="kb-dash-card-header">
+                <h3><i class="fas fa-credit-card"></i> Pending Credit Card Applications</h3>
+            </div>
+            {% if pending_card_apps %}
+            <div class="kb-table-wrapper">
+                <table class="kb-table">
+                    <thead>
+                        <tr>
+                            <th>App ID</th>
+                            <th>Customer</th>
+                            <th>Card Type</th>
+                            <th>Annual Income</th>
+                            <th>Employment</th>
+                            <th>Applied</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for card in pending_card_apps %}
+                        <tr>
+                            <td><code>{{ card.application_id }}</code></td>
+                            <td>{{ card.full_name }}<br><small>{{ card.email }}</small></td>
+                            <td>{{ card.card_type }}</td>
+                            <td>₹{{ "{:,.0f}".format(card.annual_income) }}</td>
+                            <td>{{ card.employment_type }}</td>
+                            <td>{{ card.created_at[:10] }}</td>
+                            <td class="kb-action-cell">
+                                <form action="{{ url_for('admin_card_action', app_id=card.id, action='approve') }}" method="POST" style="display:inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="note" value="Your credit card has been approved. Card will be delivered in 7 business days.">
+                                    <button type="submit" class="kb-btn-xs kb-btn-approve" onclick="return confirm('Approve this card?')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                </form>
+                                <button class="kb-btn-xs kb-btn-reject" onclick="showRejectModal('card', {{ card.id }})">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="kb-empty-state"><i class="fas fa-check-circle"></i><p>No pending card applications.</p></div>
+            {% endif %}
+        </div>
+
+        <!-- Recent Customers -->
+        <div class="kb-dash-card">
+            <div class="kb-dash-card-header">
+                <h3><i class="fas fa-users"></i> Recent Customers</h3>
+                <a href="{{ url_for('admin_customers') }}" class="kb-link-sm">View all</a>
+            </div>
+            <div class="kb-table-wrapper">
+                <table class="kb-table">
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Account No.</th>
+                            <th>Type</th>
+                            <th>Balance</th>
+                            <th>Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in recent_customers %}
+                        <tr>
+                            <td><code>{{ c.customer_id }}</code></td>
+                            <td>{{ c.full_name }}</td>
+                            <td>{{ c.email }}</td>
+                            <td>{{ c.account_number or '—' }}</td>
+                            <td>{{ c.account_type or '—' }}</td>
+                            <td>{% if c.balance is not none %}₹{{ "{:,.2f}".format(c.balance) }}{% else %}—{% endif %}</td>
+                            <td>{{ c.created_at[:10] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Reject Modal -->
+<div class="kb-modal-overlay" id="rejectModal" style="display:none">
+    <div class="kb-modal">
+        <h3><i class="fas fa-times-circle"></i> Reject Application</h3>
+        <p>Please provide a reason for rejection:</p>
+        <form method="POST" id="rejectForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <textarea name="note" rows="3" placeholder="Reason for rejection..." required class="kb-modal-textarea"></textarea>
+            <div class="kb-modal-buttons">
+                <button type="submit" class="kb-btn-danger">Confirm Reject</button>
+                <button type="button" class="kb-btn-ghost" onclick="closeRejectModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+function showRejectModal(type, id) {
+    const form = document.getElementById('rejectForm');
+    if (type === 'loan') {
+        form.action = '/admin/loan/' + id + '/reject';
+    } else {
+        form.action = '/admin/card/' + id + '/reject';
+    }
+    document.getElementById('rejectModal').style.display = 'flex';
+}
+function closeRejectModal() {
+    document.getElementById('rejectModal').style.display = 'none';
+}
+</script>
+{% endblock %}

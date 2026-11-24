@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Profile – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header">
+        <div class="kb-container">
+            <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+            <p>Manage your personal information and account settings.</p>
+        </div>
+    </div>
+
+    <div class="kb-container kb-profile-layout">
+        <!-- Profile Card -->
+        <div class="kb-profile-sidebar">
+            <div class="kb-profile-avatar-big">
+                {{ user.full_name[0].upper() }}
+            </div>
+            <h3>{{ user.full_name }}</h3>
+            <span class="kb-customer-id-badge">{{ user.customer_id }}</span>
+            <p class="kb-profile-email">{{ user.email }}</p>
+            <p class="kb-profile-joined">Member since {{ user.created_at[:10] }}</p>
+
+            {% if account %}
+            <div class="kb-profile-account-mini">
+                <div>
+                    <label>Account Number</label>
+                    <span>{{ account.account_number }}</span>
+                </div>
+                <div>
+                    <label>Account Type</label>
+                    <span>{{ account.account_type }}</span>
+                </div>
+                <div>
+                    <label>Balance</label>
+                    <span>₹{{ "{:,.2f}".format(account.balance) }}</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Profile Forms -->
+        <div class="kb-profile-main">
+            <!-- Update Info -->
+            <div class="kb-form-card">
+                <h3><i class="fas fa-edit"></i> Update Profile</h3>
+                <form action="{{ url_for('profile') }}" method="POST" class="kb-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="action" value="update_profile">
+
+                    <div class="kb-form-group">
+                        <label>Full Name</label>
+                        <input type="text" value="{{ user.full_name }}" disabled class="kb-disabled">
+                        <small class="kb-hint">Contact branch to update name</small>
+                    </div>
+                    <div class="kb-form-group">
+                        <label>Email</label>
+                        <input type="email" value="{{ user.email }}" disabled class="kb-disabled">
+                    </div>
+                    <div class="kb-form-group">
+                        <label for="phone">
+                            <i class="fas fa-phone"></i> Phone Number
+                        </label>
+                        <input type="tel" id="phone" name="phone"
+                               value="{{ user.phone }}" placeholder="10-digit number"
+                               pattern="[0-9]{10}" maxlength="10">
+                    </div>
+                    <button type="submit" class="kb-btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+
+            <!-- Change Password -->
+            <div class="kb-form-card">
+                <h3><i class="fas fa-lock"></i> Change Password</h3>
+                <form action="{{ url_for('profile') }}" method="POST" class="kb-form" id="pwForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="action" value="change_password">
+
+                    <div class="kb-form-group">
+                        <label for="current_password">Current Password</label>
+                        <div class="kb-input-pw">
+                            <input type="password" id="current_password" name="current_password"
+                                   placeholder="Enter current password" required>
+                            <button type="button" class="kb-pw-toggle" data-target="current_password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="kb-form-row">
+                        <div class="kb-form-group">
+                            <label for="new_password">New Password</label>
+                            <div class="kb-input-pw">
+                                <input type="password" id="new_password" name="new_password"
+                                       placeholder="Min. 6 characters" required minlength="6">
+                                <button type="button" class="kb-pw-toggle" data-target="new_password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="kb-form-group">
+                            <label for="confirm_password">Confirm Password</label>
+                            <div class="kb-input-pw">
+                                <input type="password" id="confirm_password" name="confirm_password"
+                                       placeholder="Repeat new password" required>
+                                <button type="button" class="kb-pw-toggle" data-target="confirm_password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="kb-btn-danger">
+                        <i class="fas fa-key"></i> Change Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.kb-pw-toggle').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const inp = document.getElementById(this.dataset.target);
+        const ico = this.querySelector('i');
+        if (inp.type === 'password') {
+            inp.type = 'text';
+            ico.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            inp.type = 'password';
+            ico.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Withdraw Money – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header kb-page-header--red">
+        <div class="kb-container">
+            <h1><i class="fas fa-arrow-circle-up"></i> Withdraw Money</h1>
+            <p>Withdraw funds from your Kubera Bank account.</p>
+        </div>
+    </div>
+
+    <div class="kb-container kb-form-page">
+        <div class="kb-txn-layout">
+            <div class="kb-form-card">
+                <form action="{{ url_for('withdraw') }}" method="POST" class="kb-form" id="withdrawForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="kb-mini-balance-card">
+                        <div class="kb-mini-balance-left">
+                            <span>Available Balance</span>
+                            <strong>₹{{ "{:,.2f}".format(account.balance) }}</strong>
+                        </div>
+                        <div class="kb-mini-balance-right">
+                            <span>{{ account.account_type }}</span>
+                            <small>{{ account.account_number }}</small>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label>Select Amount</label>
+                        <div class="kb-quick-amounts">
+                            <button type="button" class="kb-amount-btn" data-amount="500">₹500</button>
+                            <button type="button" class="kb-amount-btn" data-amount="1000">₹1,000</button>
+                            <button type="button" class="kb-amount-btn" data-amount="5000">₹5,000</button>
+                            <button type="button" class="kb-amount-btn" data-amount="10000">₹10,000</button>
+                            <button type="button" class="kb-amount-btn" data-amount="20000">₹20,000</button>
+                            <button type="button" class="kb-amount-btn" data-amount="50000">₹50,000</button>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label for="amount">
+                            <i class="fas fa-rupee-sign"></i> Enter Amount
+                        </label>
+                        <div class="kb-amount-input-wrap">
+                            <span class="kb-currency-prefix">₹</span>
+                            <input type="number" id="amount" name="amount"
+                                   placeholder="0.00" min="1"
+                                   max="{{ account.balance }}"
+                                   step="0.01" required>
+                        </div>
+                        <small class="kb-hint">Maximum withdrawal: ₹2,00,000 per transaction</small>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label for="description">
+                            <i class="fas fa-comment"></i> Description (optional)
+                        </label>
+                        <input type="text" id="description" name="description"
+                               placeholder="e.g. ATM Withdrawal, Expenses"
+                               value="Cash Withdrawal" maxlength="100">
+                    </div>
+
+                    <button type="submit" class="kb-btn-danger kb-btn-full" id="withdrawBtn">
+                        <i class="fas fa-check-circle"></i> Withdraw Now
+                    </button>
+                    <a href="{{ url_for('dashboard') }}" class="kb-btn-ghost">Back to Dashboard</a>
+                </form>
+            </div>
+
+            <div class="kb-txn-info-panel">
+                <div class="kb-info-box">
+                    <h4><i class="fas fa-info-circle"></i> Withdrawal Rules</h4>
+                    <ul>
+                        <li>Available: <strong>₹{{ "{:,.2f}".format(account.balance) }}</strong></li>
+                        <li>Max single withdrawal: <strong>₹2,00,000</strong></li>
+                        <li>Processing: <strong>Instant</strong></li>
+                        <li>Transaction fee: <strong>Free</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const availableBalance = {{ account.balance }};
+
+document.querySelectorAll('.kb-amount-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.getElementById('amount').value = this.dataset.amount;
+        document.querySelectorAll('.kb-amount-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+document.getElementById('withdrawForm').addEventListener('submit', function(e) {
+    const amount = parseFloat(document.getElementById('amount').value);
+    if (isNaN(amount) || amount <= 0) {
+        e.preventDefault();
+        alert('Please enter a valid amount.');
+        return;
+    }
+    if (amount > availableBalance) {
+        e.preventDefault();
+        alert('Insufficient balance! Available: ₹' + availableBalance.toFixed(2));
+        return;
+    }
+});
+</script>
+{% endblock %}

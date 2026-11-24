@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Deposit Money – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header kb-page-header--green">
+        <div class="kb-container">
+            <h1><i class="fas fa-arrow-circle-down"></i> Deposit Money</h1>
+            <p>Add funds to your Kubera Bank account instantly.</p>
+        </div>
+    </div>
+
+    <div class="kb-container kb-form-page">
+        <div class="kb-txn-layout">
+            <!-- Form -->
+            <div class="kb-form-card">
+                <form action="{{ url_for('deposit') }}" method="POST" class="kb-form" id="depositForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <!-- Account info -->
+                    <div class="kb-mini-balance-card">
+                        <div class="kb-mini-balance-left">
+                            <span>Available Balance</span>
+                            <strong>₹{{ "{:,.2f}".format(account.balance) }}</strong>
+                        </div>
+                        <div class="kb-mini-balance-right">
+                            <span>{{ account.account_type }}</span>
+                            <small>{{ account.account_number }}</small>
+                        </div>
+                    </div>
+
+                    <!-- Quick amount buttons -->
+                    <div class="kb-form-group">
+                        <label>Select Amount</label>
+                        <div class="kb-quick-amounts">
+                            <button type="button" class="kb-amount-btn" data-amount="500">₹500</button>
+                            <button type="button" class="kb-amount-btn" data-amount="1000">₹1,000</button>
+                            <button type="button" class="kb-amount-btn" data-amount="5000">₹5,000</button>
+                            <button type="button" class="kb-amount-btn" data-amount="10000">₹10,000</button>
+                            <button type="button" class="kb-amount-btn" data-amount="25000">₹25,000</button>
+                            <button type="button" class="kb-amount-btn" data-amount="50000">₹50,000</button>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label for="amount">
+                            <i class="fas fa-rupee-sign"></i> Enter Amount
+                        </label>
+                        <div class="kb-amount-input-wrap">
+                            <span class="kb-currency-prefix">₹</span>
+                            <input type="number" id="amount" name="amount"
+                                   placeholder="0.00" min="1" max="10000000"
+                                   step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label for="description">
+                            <i class="fas fa-comment"></i> Description (optional)
+                        </label>
+                        <input type="text" id="description" name="description"
+                               placeholder="e.g. Cash Deposit, Salary" maxlength="100"
+                               value="Cash Deposit">
+                    </div>
+
+                    <button type="submit" class="kb-btn-success kb-btn-full" id="depositBtn">
+                        <i class="fas fa-check-circle"></i> Deposit Now
+                    </button>
+                    <a href="{{ url_for('dashboard') }}" class="kb-btn-ghost">Back to Dashboard</a>
+                </form>
+            </div>
+
+            <!-- Info panel -->
+            <div class="kb-txn-info-panel">
+                <div class="kb-info-box">
+                    <h4><i class="fas fa-info-circle"></i> Deposit Information</h4>
+                    <ul>
+                        <li>Minimum deposit: <strong>₹1</strong></li>
+                        <li>Maximum single deposit: <strong>₹1 Crore</strong></li>
+                        <li>Processing: <strong>Instant</strong></li>
+                        <li>Transaction fee: <strong>Free</strong></li>
+                    </ul>
+                </div>
+                <div class="kb-info-box kb-info-box--accent">
+                    <h4><i class="fas fa-shield-alt"></i> Secure Transaction</h4>
+                    <p>All deposits are processed through our secure banking system. Your funds are protected.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Quick amount buttons
+document.querySelectorAll('.kb-amount-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.getElementById('amount').value = this.dataset.amount;
+        document.querySelectorAll('.kb-amount-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+
+// Confirm before submit
+document.getElementById('depositForm').addEventListener('submit', function(e) {
+    const amount = parseFloat(document.getElementById('amount').value);
+    if (isNaN(amount) || amount <= 0) {
+        e.preventDefault();
+        alert('Please enter a valid amount.');
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Loan Applications – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header kb-page-header--gold">
+        <div class="kb-container">
+            <h1><i class="fas fa-hand-holding-usd"></i> Loan Applications</h1>
+            <p>Apply for Personal, Education or Home loans with competitive rates.</p>
+        </div>
+    </div>
+
+    <div class="kb-container">
+
+        <!-- Loan products overview -->
+        <div class="kb-loan-types">
+            <div class="kb-loan-type">
+                <i class="fas fa-user-tie"></i>
+                <h4>Personal Loan</h4>
+                <p>From <strong>10.5%</strong> p.a. | Up to ₹25L</p>
+            </div>
+            <div class="kb-loan-type">
+                <i class="fas fa-graduation-cap"></i>
+                <h4>Education Loan</h4>
+                <p>From <strong>9.0%</strong> p.a. | Up to ₹50L</p>
+            </div>
+            <div class="kb-loan-type">
+                <i class="fas fa-home"></i>
+                <h4>Home Loan</h4>
+                <p>From <strong>8.5%</strong> p.a. | Up to ₹2Cr</p>
+            </div>
+        </div>
+
+        <div class="kb-two-panel">
+            <!-- Application Form -->
+            <div class="kb-form-card">
+                <h3><i class="fas fa-file-alt"></i> New Loan Application</h3>
+                <form action="{{ url_for('loans') }}" method="POST" class="kb-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="kb-form-group">
+                        <label for="loan_type">Loan Type</label>
+                        <select id="loan_type" name="loan_type" required>
+                            <option value="" disabled selected>Select loan type</option>
+                            <option value="Personal Loan">Personal Loan</option>
+                            <option value="Education Loan">Education Loan</option>
+                            <option value="Home Loan">Home Loan</option>
+                        </select>
+                    </div>
+
+                    <div class="kb-form-row">
+                        <div class="kb-form-group">
+                            <label for="amount">
+                                <i class="fas fa-rupee-sign"></i> Loan Amount (₹)
+                            </label>
+                            <input type="number" id="amount" name="amount"
+                                   placeholder="e.g. 500000" min="10000" required>
+                        </div>
+                        <div class="kb-form-group">
+                            <label for="duration_months">
+                                <i class="fas fa-calendar-alt"></i> Duration (Months)
+                            </label>
+                            <input type="number" id="duration_months" name="duration_months"
+                                   placeholder="e.g. 36" min="6" max="360" required>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-row">
+                        <div class="kb-form-group">
+                            <label for="monthly_income">
+                                <i class="fas fa-wallet"></i> Monthly Income (₹)
+                            </label>
+                            <input type="number" id="monthly_income" name="monthly_income"
+                                   placeholder="e.g. 50000" min="1" required>
+                        </div>
+                        <div class="kb-form-group">
+                            <label for="employment_status">Employment Status</label>
+                            <select id="employment_status" name="employment_status" required>
+                                <option value="" disabled selected>Select status</option>
+                                <option value="Salaried">Salaried</option>
+                                <option value="Self-Employed">Self-Employed</option>
+                                <option value="Business">Business Owner</option>
+                                <option value="Student">Student</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="kb-form-group">
+                        <label for="reason">
+                            <i class="fas fa-comment-dots"></i> Reason for Loan
+                        </label>
+                        <textarea id="reason" name="reason" rows="3"
+                                  placeholder="Briefly describe why you need this loan..."></textarea>
+                    </div>
+
+                    <!-- EMI Calculator (live) -->
+                    <div class="kb-emi-preview" id="emiPreview" style="display:none">
+                        <i class="fas fa-calculator"></i>
+                        Estimated Monthly EMI: <strong id="emiAmount">₹0</strong>
+                    </div>
+
+                    <button type="submit" class="kb-btn-primary kb-btn-full">
+                        <i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                </form>
+            </div>
+
+            <!-- My Applications -->
+            <div class="kb-applications-panel">
+                <h3><i class="fas fa-list-alt"></i> My Applications</h3>
+                {% if my_loans %}
+                <div class="kb-app-list">
+                    {% for loan in my_loans %}
+                    <div class="kb-app-card">
+                        <div class="kb-app-header">
+                            <span class="kb-app-type">{{ loan.loan_type }}</span>
+                            <span class="kb-status-badge
+                                {% if loan.status == 'Approved' %}kb-status-approved
+                                {% elif loan.status == 'Rejected' %}kb-status-rejected
+                                {% else %}kb-status-pending{% endif %}">
+                                {% if loan.status == 'Approved' %}<i class="fas fa-check"></i>
+                                {% elif loan.status == 'Rejected' %}<i class="fas fa-times"></i>
+                                {% else %}<i class="fas fa-clock"></i>{% endif %}
+                                {{ loan.status }}
+                            </span>
+                        </div>
+                        <div class="kb-app-details">
+                            <span>Amount: <strong>₹{{ "{:,.0f}".format(loan.amount) }}</strong></span>
+                            <span>ID: <code>{{ loan.application_id }}</code></span>
+                            <span>Applied: {{ loan.created_at[:10] }}</span>
+                        </div>
+                        {% if loan.admin_note %}
+                        <div class="kb-app-note">
+                            <i class="fas fa-comment"></i> {{ loan.admin_note }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="kb-empty-state">
+                    <i class="fas fa-file-alt"></i>
+                    <p>No loan applications yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Live EMI calculator
+function calculateEMI() {
+    const amount   = parseFloat(document.getElementById('amount').value) || 0;
+    const months   = parseInt(document.getElementById('duration_months').value) || 0;
+    const loanType = document.getElementById('loan_type').value;
+
+    // Interest rates
+    const rates = {
+        'Personal Loan': 10.5,
+        'Education Loan': 9.0,
+        'Home Loan': 8.5
+    };
+    const rate  = (rates[loanType] || 10) / 12 / 100;
+    const preview = document.getElementById('emiPreview');
+
+    if (amount > 0 && months > 0 && rate > 0) {
+        const emi = (amount * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+        document.getElementById('emiAmount').textContent = '₹' + emi.toFixed(2);
+        preview.style.display = 'flex';
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
+['amount', 'duration_months', 'loan_type'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calculateEMI);
+    document.getElementById(id).addEventListener('change', calculateEMI);
+});
+</script>
+{% endblock %}

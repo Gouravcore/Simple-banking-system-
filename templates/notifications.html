@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Notifications – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-page-wrapper">
+    <div class="kb-page-header">
+        <div class="kb-container">
+            <h1><i class="fas fa-bell"></i> Notifications</h1>
+            <p>All your banking alerts and updates.</p>
+        </div>
+    </div>
+
+    <div class="kb-container">
+        {% if notifications %}
+        <div class="kb-notif-full-list">
+            {% for n in notifications %}
+            <div class="kb-notif-full-item {% if not n.is_read %}kb-notif-unread{% endif %}">
+                <div class="kb-notif-full-icon">
+                    {% if '✅' in n.message or 'deposited' in n.message %}
+                        <i class="fas fa-arrow-circle-down" style="color:#43a047"></i>
+                    {% elif '💸' in n.message or 'withdrawn' in n.message or 'transferred' in n.message %}
+                        <i class="fas fa-arrow-circle-up" style="color:#e53935"></i>
+                    {% elif '💳' in n.message %}
+                        <i class="fas fa-credit-card" style="color:#1565c0"></i>
+                    {% elif '📄' in n.message or 'loan' in n.message.lower() %}
+                        <i class="fas fa-file-alt" style="color:#D4AF37"></i>
+                    {% elif '🎉' in n.message %}
+                        <i class="fas fa-university" style="color:#B71C1C"></i>
+                    {% else %}
+                        <i class="fas fa-bell" style="color:#B71C1C"></i>
+                    {% endif %}
+                </div>
+                <div class="kb-notif-full-content">
+                    <p>{{ n.message }}</p>
+                    <small><i class="fas fa-clock"></i> {{ n.created_at[:16] }}</small>
+                </div>
+                {% if not n.is_read %}
+                <span class="kb-new-badge">NEW</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="kb-empty-state kb-empty-state--page">
+            <i class="fas fa-bell-slash"></i>
+            <h3>No Notifications</h3>
+            <p>You have no notifications yet. Start banking to receive alerts!</p>
+            <a href="{{ url_for('dashboard') }}" class="kb-btn-primary">Go to Dashboard</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

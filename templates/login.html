@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Login – Kubera Bank{% endblock %}
+
+{% block content %}
+<div class="kb-auth-page">
+    <div class="kb-auth-left">
+        <div class="kb-auth-brand">
+            <div class="kb-logo-mark kb-logo-mark--xl">K</div>
+            <h1>KUBERA BANK</h1>
+            <p>Your Wealth, Our Responsibility.</p>
+        </div>
+        <div class="kb-auth-quote">
+            <blockquote>
+                "The safe banking of yesterday meets the digital power of today."
+            </blockquote>
+        </div>
+        <div class="kb-auth-features">
+            <div class="kb-auth-feature"><i class="fas fa-history"></i> Real-time transaction history</div>
+            <div class="kb-auth-feature"><i class="fas fa-chart-pie"></i> Spending analytics</div>
+            <div class="kb-auth-feature"><i class="fas fa-bell"></i> Instant notifications</div>
+            <div class="kb-auth-feature"><i class="fas fa-file-pdf"></i> Downloadable statements</div>
+        </div>
+    </div>
+
+    <div class="kb-auth-right">
+        <div class="kb-auth-box">
+            <div class="kb-auth-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to access your Kubera Bank account.</p>
+            </div>
+
+            <form action="{{ url_for('login') }}" method="POST" class="kb-form" novalidate>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="kb-form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <input type="email" id="email" name="email"
+                           placeholder="your@email.com" required autofocus>
+                </div>
+
+                <div class="kb-form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="kb-input-pw">
+                        <input type="password" id="password" name="password"
+                               placeholder="Enter your password" required>
+                        <button type="button" class="kb-pw-toggle" data-target="password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="kb-btn-primary kb-btn-full">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+
+            <!-- Demo credentials helper -->
+            <div class="kb-demo-box">
+                <p><strong><i class="fas fa-info-circle"></i> Admin Login:</strong></p>
+                <p>Email: <code>admin@kuberabank.com</code></p>
+                <p>Password: <code>kubera@admin2024</code></p>
+            </div>
+
+            <p class="kb-auth-switch">
+                New to Kubera Bank?
+                <a href="{{ url_for('register') }}">Open an Account</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.kb-pw-toggle').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const inp = document.getElementById(this.dataset.target);
+        const ico = this.querySelector('i');
+        if (inp.type === 'password') {
+            inp.type = 'text';
+            ico.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            inp.type = 'password';
+            ico.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    });
+});
+</script>
+{% endblock %}
